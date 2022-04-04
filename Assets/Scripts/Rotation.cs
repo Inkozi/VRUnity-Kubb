@@ -18,7 +18,6 @@ public class Rotation : MonoBehaviour
         
     }
 
-    //doing a super simple change
     void FixedUpdate(){
       transform.Rotate(Time.deltaTime * speed, Time.deltaTime * speed, Time.deltaTime * speed);
     }

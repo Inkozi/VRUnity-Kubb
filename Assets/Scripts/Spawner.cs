@@ -9,7 +9,7 @@ public class Spawner : MonoBehaviour
 
     public void Spawn(){
 
-    	Instantiate(objectToSpawn, transform.position, transform.rota);
+    	Instantiate(objectToSpawn, transform.position, transform.rotation);
 
     }
 }

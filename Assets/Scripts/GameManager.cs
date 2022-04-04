@@ -10,8 +10,16 @@ public class GameManager : MonoBehaviour
 	public GameState State;
 	public static event Action<GameState> OnGameStateChanged;
 
-	public GameObject TeamASpawner;
-	public GameObject TeamBSpawner;
+
+  public GameObject TeamABlocks;
+  public GameObject TeamASkulls;
+  public GameObject TeamARebuttalSkulls;
+
+  public GameObject TeamBBlocks;
+  public GameObject TeamBSkulls;
+  public GameObject TeamBRebuttalSkulls;
+
+  private bool gameStarted = false;
 
 	void Awake() {
 		Instance = this;
@@ -20,20 +28,24 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        UpdateGameState(GameState.PreGame);
+        //UpdateGameState(GameState.PreGame);
     }
 
     void Update(){
 
     }
 
+
     public void StartGame(bool startingTeam){
-    	if (startingTeam == true){
-    		UpdateGameState(GameState.TeamATurn);
-    	}
-    	else{
-    		UpdateGameState(GameState.TeamBTurn);
-    	}
+      if (gameStarted == false){
+        HandlePreGame();
+        if (startingTeam == true){
+          UpdateGameState(GameState.TeamATurn);
+        }
+        else{
+          UpdateGameState(GameState.TeamBTurn);
+        }
+      }
     }
 
     // Update is called once per frame
@@ -43,6 +55,7 @@ public class GameManager : MonoBehaviour
 
     	switch(newState){
     		case GameState.PreGame:
+          HandlePreGame();
     			break;
     		case GameState.TeamATurn:
     			HandleTeamATurn();
@@ -54,8 +67,10 @@ public class GameManager : MonoBehaviour
     			break;
     		case GameState.TeamBSkullTurn:
     			break;
-    		case GameState.PostGame:
+    		case GameState.TeamAVictory:
     			break;
+        case GameState.TeamBVictory:
+          break;
     		default:
     			Debug.Log("State Does Not Exist");
     			break;
@@ -63,22 +78,23 @@ public class GameManager : MonoBehaviour
         OnGameStateChanged?.Invoke(newState);
     }
 
-	private void HandleTeamATurn(){
 
-		//spawn X number of wood blocks
-		TeamASpawner.GetComponent<Spawner>().Spawn();
-		TeamASpawner.GetComponent<Spawner>().Spawn();
-	
-		
+  private void HandlePreGame(){
+    TeamARebuttalSkulls.SetActive(false);
+    TeamBRebuttalSkulls.SetActive(false);
+    TeamBBlocks.SetActive(false);
+    TeamABlocks.SetActive(false);
+  }
+
+
+	private void HandleTeamATurn(){
+    TeamBBlocks.SetActive(false);
+    TeamABlocks.SetActive(true);
 	}
 
 	private void HandleTeamBTurn(){
-
-		//spawn X number of wood blocks
-		TeamBSpawner.GetComponent<Spawner>().Spawn();
-		TeamBSpawner.GetComponent<Spawner>().Spawn();
-
-	
+    TeamABlocks.SetActive(false);
+    TeamBBlocks.SetActive(true);
 	}
 
 }
@@ -89,7 +105,6 @@ public enum GameState{
 	TeamBTurn,
 	TeamASkullTurn,
 	TeamBSkullTurn,
-	PostGame
-
-
+	TeamAVictory,
+  TeamBVictory
 }

@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour
 	//private Dictionary<string, List<GameObject>> teamPiecesA;
 	//private Dictionary<string, List<GameObject>> teamPiecesB;
 
+  public GameObject BlockParentA;
+  public GameObject BlockParentB;
 
   private GameObject king;
 
@@ -76,6 +78,7 @@ public class GameController : MonoBehaviour
     }
 
     private void RestorePositions(List<GameObject> items, List<Vector3> pos){
+      Debug.Log("Restoring Positions");
       for (int item = 0; item < items.Count; item++){
         items[item].transform.position = pos[item];
       } 
@@ -89,18 +92,18 @@ public class GameController : MonoBehaviour
     	}
     }
 
-    private void UpdatePieces(string team, string item, List<GameObject> pieces){
-    	for (int piece = 0; piece < pieces.Count; piece++){
-        pieces[piece] = GameObject.Find(item + "_" + (piece + 1).ToString() + team);
-        Debug.Log(pieces[piece]);
-    	}
+    //Reparent peices and this is meant for blocks
+    private void ParentPeices(List<GameObject> pieces, GameObject parent){
+      for (int piece = 0; piece < pieces.Count; piece++){
+        pieces[piece].transform.SetParent(parent.transform, false);
+      }
     }
 
     //Report position of anything you throw in this function;
     private void ReportPiecePosition(List<GameObject> pieces){
-		for (int piece = 0; piece < pieces.Count; piece++){
-			Debug.Log(pieces[piece].transform.position);
-		}
+      for (int piece = 0; piece < pieces.Count; piece++){
+        Debug.Log(pieces[piece].transform.position);
+      }
     }
 
     //removing skulls from the game when they are destroyed
@@ -186,12 +189,14 @@ public class GameController : MonoBehaviour
           origBSkulls = skullsB.Count;
           Debug.Log("Team B's Turn");
     			GameManager.Instance.UpdateGameState(GameState.TeamBTurn);
-          woodBlocksB.Clear();
-    	    PopulatePieces("B", numBlocks, "WoodBlock", woodBlocksB);
-          RestorePositions(woodBlocksB, woodBlocksB_origpos);
+          //woodBlocksB.Clear();
+    	    //PopulatePieces("B", numBlocks, "WoodBlock", woodBlocksB);
+          //RestorePositions(woodBlocksB, woodBlocksB_origpos);
     		}
     	}
 
+
+      /*
     	//if teamB's turn and !teamsTurn(woodBlocksB, "B")
     	if (GameManager.Instance.State == GameState.TeamBTurn && !teamsTurn(woodBlocksB, "B")){
     		//if (skullsA < initialSkulls)
@@ -208,7 +213,7 @@ public class GameController : MonoBehaviour
     	    PopulatePieces("A", numBlocks, "WoodBlock", woodBlocksA);
           RestorePositions(woodBlocksA, woodBlocksA_origpos);
         }
-      }
+      }*/
 
       /*
     	//if teamA's rebuttal and !teamsTurn(skullsAA, "A")
@@ -230,16 +235,17 @@ public class GameController : MonoBehaviour
     void FixedUpdate()
     {
     	loop();
-      teamsTurn(woodBlocksA, "A");
+
     	//Debug.Log(GameState.state);
-      UpdatePieces("A", "WoodBlock", woodBlocksA);
-      UpdatePieces("B", "WoodBlock", woodBlocksB);
+      //UpdatePieces("A", "WoodBlock", woodBlocksA);
+      //UpdatePieces("B", "WoodBlock", woodBlocksB);
 
       /*
     	RemovePiece(skullsA);
     	RemovePiece(skullsAA);
     	RemovePiece(skullsB);
-    	RemovePiece(skullsBB);*/
+    	
+      RemovePiece(skullsBB);*/
 
     	//win();
     }

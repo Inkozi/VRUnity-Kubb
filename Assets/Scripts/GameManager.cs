@@ -14,69 +14,74 @@ public class GameManager : MonoBehaviour
   public GameObject TeamABlocks;
   public GameObject TeamASkulls;
   public GameObject TeamARebuttalSkulls;
+  public GameObject TeamASockets;
 
   public GameObject TeamBBlocks;
   public GameObject TeamBSkulls;
   public GameObject TeamBRebuttalSkulls;
+  public GameObject TeamBSockets;
+
+  private PieceManager pm;
 
   private bool gameStarted = false;
 
-	void Awake() {
-		Instance = this;
+  void Awake() {
+      Instance = this;
 
-	}
+  }
 
-    void Start()
-    {
-        //UpdateGameState(GameState.PreGame);
-    }
+  void Start()
+  {
+      pm = this.GetComponent<PieceManager>();
+      pm.inactivateObjects('A');
+  }
 
-    void Update(){
+  void Update(){
 
-    }
+  }
 
 
-    public void StartGame(bool startingTeam){
-      if (gameStarted == false){
-        HandlePreGame();
-        if (startingTeam == true){
-          UpdateGameState(GameState.TeamATurn);
-        }
-        else{
-          UpdateGameState(GameState.TeamBTurn);
-        }
+  public void StartGame(bool startingTeam){
+    if (gameStarted == false){
+      HandlePreGame();
+      if (startingTeam == true){
+        UpdateGameState(GameState.TeamATurn);
+      }
+      else{
+        UpdateGameState(GameState.TeamBTurn);
       }
     }
+  }
 
-    // Update is called once per frame
-    public void UpdateGameState(GameState newState)
-    {
-    	State = newState;
+  // Update is called once per frame
+  public void UpdateGameState(GameState newState)
+  {
+      State = newState;
 
-    	switch(newState){
-    		case GameState.PreGame:
-          HandlePreGame();
-    			break;
-    		case GameState.TeamATurn:
-    			HandleTeamATurn();
-    			break;
-    		case GameState.TeamBTurn:
-    			HandleTeamBTurn();
-    			break;
-    		case GameState.TeamASkullTurn:
-    			break;
-    		case GameState.TeamBSkullTurn:
-    			break;
-    		case GameState.TeamAVictory:
-    			break;
-        case GameState.TeamBVictory:
-          break;
-    		default:
-    			Debug.Log("State Does Not Exist");
-    			break;
-    	}
-        OnGameStateChanged?.Invoke(newState);
-    }
+      switch(newState){
+          case GameState.PreGame:
+              HandlePreGame();
+              break;
+          case GameState.TeamATurn:
+              HandleTeamATurn();
+              break;
+          case GameState.TeamBTurn:
+              HandleTeamBTurn();
+              break;
+          case GameState.TeamASkullTurn:
+              break;
+          case GameState.TeamBSkullTurn:
+              break;
+          case GameState.TeamAVictory:
+              break;
+      case GameState.TeamBVictory:
+        break;
+          default:
+              Debug.Log("State Does Not Exist");
+              break;
+      }
+      OnGameStateChanged?.Invoke(newState);
+  }
 
 
   private void HandlePreGame(){
@@ -84,18 +89,19 @@ public class GameManager : MonoBehaviour
     TeamBRebuttalSkulls.SetActive(false);
     TeamBBlocks.SetActive(false);
     TeamABlocks.SetActive(false);
+    //TeamBBlocks.GetComponent<PieceManager>().inactivateObjects();
   }
 
 
-	private void HandleTeamATurn(){
-    TeamBBlocks.SetActive(false);
+  private void HandleTeamATurn(){
+    //TeamBBlocks.GetComponent<PieceManager>().inactivateObjects();
     TeamABlocks.SetActive(true);
-	}
+  }
 
-	private void HandleTeamBTurn(){
+  private void HandleTeamBTurn(){
     TeamABlocks.SetActive(false);
     TeamBBlocks.SetActive(true);
-	}
+  }
 
 }
 

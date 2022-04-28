@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
 
   private bool gameStarted = false;
 
+  private bool activated = false;
+
   void Awake() {
       Instance = this;
 
@@ -33,11 +35,14 @@ public class GameManager : MonoBehaviour
   void Start()
   {
       pm = this.GetComponent<PieceManager>();
-      pm.inactivateObjects('A');
   }
 
   void Update(){
 
+      if (activated == false){
+        pm.toggleObjects('B', false);
+        activated = true;
+      }
   }
 
 

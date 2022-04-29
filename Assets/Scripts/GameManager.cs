@@ -39,10 +39,6 @@ public class GameManager : MonoBehaviour
 
   void Update(){
 
-      if (activated == false){
-        pm.toggleObjects('B', false);
-        activated = true;
-      }
   }
 
 
@@ -90,22 +86,19 @@ public class GameManager : MonoBehaviour
 
 
   private void HandlePreGame(){
-    TeamARebuttalSkulls.SetActive(false);
-    TeamBRebuttalSkulls.SetActive(false);
-    TeamBBlocks.SetActive(false);
-    TeamABlocks.SetActive(false);
-    //TeamBBlocks.GetComponent<PieceManager>().inactivateObjects();
+    pm.toggleSkulls('A', false, false);
+    pm.toggleSkulls('B', false, false);
   }
 
 
   private void HandleTeamATurn(){
-    //TeamBBlocks.GetComponent<PieceManager>().inactivateObjects();
-    TeamABlocks.SetActive(true);
+    pm.toggleObjects('B', false);
+    pm.toggleObjects('A', true);
   }
 
   private void HandleTeamBTurn(){
-    TeamABlocks.SetActive(false);
-    TeamBBlocks.SetActive(true);
+    pm.toggleObjects('A', false);
+    pm.toggleObjects('B', true);
   }
 
 }

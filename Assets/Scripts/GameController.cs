@@ -180,40 +180,39 @@ public class GameController : MonoBehaviour
       Debug.Log(GameManager.Instance.State);
     	if (GameManager.Instance.State == GameState.TeamATurn && !teamsTurn(woodBlocksA, "A")){
     		//if (skullsB < initialSkulls)
-    		if (skullsB.Count < origBSkulls){
+    	//	if (skullsB.Count < origBSkulls){
     			//invoke teamB's rebuttal
     			//GameManager.Instance.UpdateGameState(GameState.TeamBSkullTurn);
-    		}
-    		else{
+    	//	}
+    	//	else{
     			//invoke teamB's turn
           origBSkulls = skullsB.Count;
           Debug.Log("Team B's Turn");
     			GameManager.Instance.UpdateGameState(GameState.TeamBTurn);
           //woodBlocksB.Clear();
     	    //PopulatePieces("B", numBlocks, "WoodBlock", woodBlocksB);
-          //RestorePositions(woodBlocksB, woodBlocksB_origpos);
-    		}
+          RestorePositions(woodBlocksB, woodBlocksB_origpos);
+    	//	}
     	}
 
 
-      /*
     	//if teamB's turn and !teamsTurn(woodBlocksB, "B")
     	if (GameManager.Instance.State == GameState.TeamBTurn && !teamsTurn(woodBlocksB, "B")){
     		//if (skullsA < initialSkulls)
-    		if (skullsA.Count < origASkulls){
+    		// if (skullsA.Count < origASkulls){
     			//invoke teamA's rebuttal
     			//GameManager.Instance.UpdateGameState(GameState.TeamASkullTurn);
-        }
-        else{
+       // }
+       // else{
     			//invoke teamA's turn
           origASkulls = skullsA.Count; 
           Debug.Log("Team A's Turn");
     			GameManager.Instance.UpdateGameState(GameState.TeamATurn);
-          woodBlocksA.Clear();
-    	    PopulatePieces("A", numBlocks, "WoodBlock", woodBlocksA);
+          //woodBlocksA.Clear();
+    	    //PopulatePieces("A", numBlocks, "WoodBlock", woodBlocksA);
           RestorePositions(woodBlocksA, woodBlocksA_origpos);
-        }
-      }*/
+        //}
+      }
 
       /*
     	//if teamA's rebuttal and !teamsTurn(skullsAA, "A")

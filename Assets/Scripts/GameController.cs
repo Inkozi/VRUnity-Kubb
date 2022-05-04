@@ -28,6 +28,12 @@ public class GameController : MonoBehaviour
   private List<Vector3> woodBlocksA_origpos = new List<Vector3>();
   private List<Vector3> woodBlocksB_origpos = new List<Vector3>();
 
+	private List<GameObject> socketsA = new List<GameObject>();
+	private List<GameObject> socketsB = new List<GameObject>();
+  private List<Vector3> socketsA_origpos = new List<Vector3>();
+  private List<Vector3> socketsB_origpos = new List<Vector3>();
+
+
 	private const int numTeams = 2;
 	private const int numSkulls = 5;
 	private const int numBlocks = 6;
@@ -55,30 +61,37 @@ public class GameController : MonoBehaviour
     	//populate gameobjects
     	PopulatePieces("A", numSkulls, "Skull", skullsA);
     	PopulatePieces("B", numSkulls, "Skull", skullsB);
-    	//PopulatePieces("AA", numSkulls, "Skull", skullsAA);
-    	//PopulatePieces("BB", numSkulls, "SKull", skullsBB);
+    	PopulatePieces("AA", numSkulls, "Skull", skullsAA);
+    	PopulatePieces("BB", numSkulls, "Skull", skullsBB);
     	PopulatePieces("A", numBlocks, "WoodBlock", woodBlocksA);
     	PopulatePieces("B", numBlocks, "WoodBlock", woodBlocksB);
+      PopulatePieces("A", numBlocks, "Socket", socketsA);
+      PopulatePieces("B", numBlocks, "Socket", socketsB);
 
       //save original positions
-      OriginalPositions(skullsA, skullsA_origpos);
-      OriginalPositions(skullsB, skullsB_origpos);
-      //OriginalPositions(skullsAA, skullsAA_origpos);
-      //OriginalPositions(skullsB, skullsBB_origpos);
-      OriginalPositions(woodBlocksA, woodBlocksA_origpos);
-      OriginalPositions(woodBlocksB, woodBlocksB_origpos);
+      OriginalPositions("iskulls", skullsA, skullsA_origpos);
+      OriginalPositions("iskulls", skullsB, skullsB_origpos);
+      OriginalPositions("rskullsA", skullsAA, skullsAA_origpos);
+      OriginalPositions("rskullsB", skullsBB, skullsBB_origpos);
+      OriginalPositions("blocks", woodBlocksA, woodBlocksA_origpos);
+      OriginalPositions("blocks", woodBlocksB, woodBlocksB_origpos);
+      OriginalPositions("sockets", socketsA, socketsA_origpos);
+      OriginalPositions("sockets", socketsB, socketsB_origpos);
+      OriginalPositions("rskullsA", skullsAA, skullsAA_origpos);
+      OriginalPositions("rskullsB", skullsBB, skullsBB_origpos);
 
     }
 
     //Save Original Positions
-    private void OriginalPositions(List<GameObject> items, List<Vector3> pos){
+    private void OriginalPositions(string name, List<GameObject> items, List<Vector3> pos){
+      //Debug.Log(name);
       for (int item = 0; item < items.Count; item++){
         pos.Add(new Vector3(items[item].transform.position.x, items[item].transform.position.y, items[item].transform.position.z));
       }
     }
 
     private void RestorePositions(List<GameObject> items, List<Vector3> pos){
-      Debug.Log("Restoring Positions");
+      //Debug.Log("Restoring Positions");
       for (int item = 0; item < items.Count; item++){
         items[item].transform.position = pos[item];
       } 
@@ -86,10 +99,11 @@ public class GameController : MonoBehaviour
 
     //Populate
     private void PopulatePieces(string team, int numPieces, string item, List<GameObject> pieces){
-      Debug.Log("Populating Pieces");
+      //Debug.Log("Populating Pieces: " + item);
     	for (int piece = 0; piece < numPieces; piece++){
     		pieces.Add(GameObject.Find(item + "_" + (piece + 1).ToString() + team));
     	}
+      //Debug.Log("Number of pieces: " + numPieces);
     }
 
     //Reparent peices and this is meant for blocks
@@ -111,12 +125,15 @@ public class GameController : MonoBehaviour
     	bool removal = false;
     	int index = 0;
       for (int piece = 0; piece < pieces.Count; piece++){
-        if (pieces[piece] == null){
+        Debug.Log(pieces[piece]);
+        if (pieces[piece].Equals(null)){
+            Debug.Log("How is this thing null??");
             removal = true;
             index = piece;
         }
       }
       if (removal){
+        Debug.Log("Something being removed??");
         pieces.RemoveAt(index);
       }
     }
@@ -131,7 +148,6 @@ public class GameController : MonoBehaviour
     }
 
 
-
     private bool teamsTurn(List<GameObject> pieces, string team){
     	bool stillTurn = false;
     	GameObject plane = GameObject.Find("TeamAPlane");
@@ -139,9 +155,6 @@ public class GameController : MonoBehaviour
     		plane = GameObject.Find("TeamBPlane");
     	}
        
-
-      //Debug.Log("first piece: " + pieces[0].transform.position);
-      //Debug.Log("plane: " + plane.transform.position);
     	for (int piece = 0; piece < pieces.Count; piece++){
     		Rigidbody rb = pieces[piece].GetComponent<Rigidbody>();
     		if (team == "A"){
@@ -179,54 +192,54 @@ public class GameController : MonoBehaviour
       //if teamA's turn and !teamsTurn(woodBlocksA, "A")
       Debug.Log(GameManager.Instance.State);
     	if (GameManager.Instance.State == GameState.TeamATurn && !teamsTurn(woodBlocksA, "A")){
-    		//if (skullsB < initialSkulls)
-    	//	if (skullsB.Count < origBSkulls){
+        //Debug.Log("skullsB count: + " + skullsB.Count);
+        //Debug.Log("origBSkulls count: + " + origBSkulls);
+    		if (skullsB.Count < origBSkulls){
     			//invoke teamB's rebuttal
-    			//GameManager.Instance.UpdateGameState(GameState.TeamBSkullTurn);
-    	//	}
-    	//	else{
+            origBSkulls = skullsB.Count;
+    			  GameManager.Instance.UpdateGameState(GameState.TeamBSkullTurn);
+    		}
+    	else{
     			//invoke teamB's turn
           origBSkulls = skullsB.Count;
           Debug.Log("Team B's Turn");
     			GameManager.Instance.UpdateGameState(GameState.TeamBTurn);
-          //woodBlocksB.Clear();
-    	    //PopulatePieces("B", numBlocks, "WoodBlock", woodBlocksB);
           RestorePositions(woodBlocksB, woodBlocksB_origpos);
-    	//	}
+    		}
     	}
 
 
     	//if teamB's turn and !teamsTurn(woodBlocksB, "B")
     	if (GameManager.Instance.State == GameState.TeamBTurn && !teamsTurn(woodBlocksB, "B")){
-    		//if (skullsA < initialSkulls)
-    		// if (skullsA.Count < origASkulls){
+        Debug.Log("skullsA count: + " + skullsA.Count);
+        Debug.Log("origASkulls count: + " + origASkulls);
+    	  if (skullsA.Count < origASkulls){
     			//invoke teamA's rebuttal
-    			//GameManager.Instance.UpdateGameState(GameState.TeamASkullTurn);
-       // }
-       // else{
+          origASkulls = skullsA.Count;
+    			GameManager.Instance.UpdateGameState(GameState.TeamASkullTurn);
+       }
+       else{
     			//invoke teamA's turn
           origASkulls = skullsA.Count; 
           Debug.Log("Team A's Turn");
     			GameManager.Instance.UpdateGameState(GameState.TeamATurn);
-          //woodBlocksA.Clear();
-    	    //PopulatePieces("A", numBlocks, "WoodBlock", woodBlocksA);
           RestorePositions(woodBlocksA, woodBlocksA_origpos);
-        //}
+        }
       }
 
-      /*
+      
     	//if teamA's rebuttal and !teamsTurn(skullsAA, "A")
       if (GameManager.Instance.State == GameState.TeamASkullTurn && !teamsTurn(skullsAA, "A")){
           origBSkulls = skullsB.Count;
     			GameManager.Instance.UpdateGameState(GameState.TeamBTurn);
+          RestorePositions(woodBlocksB, woodBlocksB_origpos);
       }
     	//if teamB's rebuttal and !teamsTurn(skullsBB, "B")
-      if (GameManager.Instance.State == GameState.TeamASkullTurn && !teamsTurn(skullsBB, "B")){
-    			//invoke teamA's turn  
-          origASkulls = skullsA.Count; 
+      if (GameManager.Instance.State == GameState.TeamBSkullTurn && !teamsTurn(skullsBB, "B")){
+          origASkulls = skullsA.Count;
     			GameManager.Instance.UpdateGameState(GameState.TeamATurn);
+          RestorePositions(woodBlocksA, woodBlocksA_origpos);
       }
-      */
     }
 
 
@@ -239,12 +252,10 @@ public class GameController : MonoBehaviour
       //UpdatePieces("A", "WoodBlock", woodBlocksA);
       //UpdatePieces("B", "WoodBlock", woodBlocksB);
 
-      /*
     	RemovePiece(skullsA);
     	RemovePiece(skullsAA);
     	RemovePiece(skullsB);
-    	
-      RemovePiece(skullsBB);*/
+      RemovePiece(skullsBB);
 
     	//win();
     }

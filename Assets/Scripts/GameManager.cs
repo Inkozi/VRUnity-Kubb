@@ -70,8 +70,10 @@ public class GameManager : MonoBehaviour
               HandleTeamBTurn();
               break;
           case GameState.TeamASkullTurn:
+              HandleTeamARebuttal();
               break;
           case GameState.TeamBSkullTurn:
+              HandleTeamBRebuttal();
               break;
           case GameState.TeamAVictory:
               break;
@@ -92,13 +94,25 @@ public class GameManager : MonoBehaviour
 
 
   private void HandleTeamATurn(){
+    Debug.Log("executing A's Turn");
     pm.toggleObjects('B', false);
     pm.toggleObjects('A', true);
   }
 
   private void HandleTeamBTurn(){
+    Debug.Log("executing B's Turn");
     pm.toggleObjects('A', false);
     pm.toggleObjects('B', true);
+  }
+
+  private void HandleTeamARebuttal(){
+    pm.prepareRebuttal('A');
+    //pm.toggleSkulls('A', false, true);
+  }
+
+  private void HandleTeamBRebuttal(){
+    pm.prepareRebuttal('B');
+   //pm.toggleSkulls('B', false, true);
   }
 
 }
